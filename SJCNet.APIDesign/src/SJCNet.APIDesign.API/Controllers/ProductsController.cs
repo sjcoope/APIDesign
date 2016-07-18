@@ -36,13 +36,16 @@ namespace SJCNet.APIDesign.API.Controllers
 
                     // Add pagination
                     var helper = new PaginationHelper(products.Count(), pageSize, page);
-                    HttpContext.Response.Headers.Add(helper.Header);
+                    if (helper.PaginationIsActive)
+                    {
+                        HttpContext.Response.Headers.Add("X-Pagination", helper.PaginationInfoJson);
 
-                    // Generate result
-                    productsResult = productsResult
-                        .Skip(helper.SkipCount)
-                        .Take(helper.PageSize);
-
+                        // Generate paged result
+                        productsResult = productsResult
+                            .Skip(helper.SkipCount)
+                            .Take(helper.PageSize);
+                    }
+                    
                     return Ok(productsResult.ToList());
 
                 };

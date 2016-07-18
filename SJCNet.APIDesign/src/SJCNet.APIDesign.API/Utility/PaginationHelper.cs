@@ -11,7 +11,6 @@ namespace SJCNet.APIDesign.API.Utility
     {
         private readonly int _recordCount;
         private readonly int _page;
-        private const string PaginationHeader = "X-Pagination";
 
         // Would usually be stored in config.
         private const int _maxPageSize = 10;
@@ -28,7 +27,7 @@ namespace SJCNet.APIDesign.API.Utility
             this.PageSize = (pageSize > _maxPageSize) ? _maxPageSize : pageSize;
 
             // Generate the pagination header info.
-            this.Header = new KeyValuePair<string, StringValues>(PaginationHeader, SerializePaginationInfo());
+            SerializePaginationInfo();
         }
 
         public int SkipCount => (PageSize * (CurrentPage - 1));
@@ -41,9 +40,9 @@ namespace SJCNet.APIDesign.API.Utility
 
         private int CurrentPage { get; set; }
 
-        public KeyValuePair<string, StringValues> Header { get; internal set; }
+        public string PaginationInfoJson { get; private set; }
 
-        private string SerializePaginationInfo()
+        private void SerializePaginationInfo()
         {
             var totalPages = (int)Math.Ceiling((double)this.RecordCount / this.PageSize);
 
@@ -55,7 +54,7 @@ namespace SJCNet.APIDesign.API.Utility
                 totalPages = totalPages,
             };
 
-            return JsonConvert.SerializeObject(paginationHeader);
+            this.PaginationInfoJson = JsonConvert.SerializeObject(paginationHeader);
         }
     }
 }

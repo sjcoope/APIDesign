@@ -24,24 +24,21 @@ namespace SJCNet.APIDesign.Tests.Unit
             Assert.Equal(helper.SkipCount, 0);
             Assert.Equal(helper.PageSize, pageSize);
 
-            // Assert - Check header key
-            Assert.True(helper.Header.Key == "X-Pagination", "Header key is not as expected");
+            // Assert - Check serialized JSON info
+            dynamic paginationInfo = JObject.Parse(helper.PaginationInfoJson);
+            Assert.NotNull(paginationInfo);
 
-            // Assert - Check header value
-            dynamic headerValue = JObject.Parse(helper.Header.Value);
-            Assert.NotNull(headerValue);
+            Assert.NotNull(paginationInfo.currentPage);
+            Assert.True(currentPage == (int)paginationInfo.currentPage, "Current page value is not expected");
 
-            Assert.NotNull(headerValue.currentPage);
-            Assert.True(currentPage == (int)headerValue.currentPage, "CurrentPage value in the header is not expected");
+            Assert.NotNull(paginationInfo.pageSize);
+            Assert.True(pageSize == (int)paginationInfo.pageSize, "Page size value is not expected");
 
-            Assert.NotNull(headerValue.pageSize);
-            Assert.Equal(pageSize, (int)headerValue.pageSize);
+            Assert.NotNull(paginationInfo.recordCount);
+            Assert.True(recordCount == (int)paginationInfo.recordCount, "Record count value is not expected");
 
-            Assert.NotNull(headerValue.recordCount);
-            Assert.Equal(recordCount, (int)headerValue.recordCount);
-
-            Assert.NotNull(headerValue.totalPages);
-            Assert.Equal(expectedTotalPages, (int)headerValue.totalPages);
+            Assert.NotNull(paginationInfo.totalPages);
+            Assert.True(expectedTotalPages == (int)paginationInfo.totalPages, "Total pages value is not expected");
         }
 
         // Additional Tests:
