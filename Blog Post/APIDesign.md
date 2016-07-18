@@ -79,6 +79,9 @@ This lets us create APIs, that are then easy to test locally via the Swagger UI.
 ## Data Sorting and Paging
 TODO
 
+## Validation
+TODO
+
 ## Versioning
 In the case of versioning your API, there are 4 main approaches.
 

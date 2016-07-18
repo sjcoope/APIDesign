@@ -56,7 +56,6 @@ namespace SJCNet.APIDesign.API
             // Dependency Injection
             services.AddSingleton(new DataContext());
             services.AddScoped<IRepository<Product>, ProductsRepository>();
-            services.AddScoped<IRepository<Order>, OrdersRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
