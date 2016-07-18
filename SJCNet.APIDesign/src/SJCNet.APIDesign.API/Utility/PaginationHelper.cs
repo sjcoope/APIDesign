@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections;
 using Newtonsoft.Json;
+using Microsoft.AspNetCore.Http;
+using System.Collections.Generic;
+using Microsoft.Extensions.Primitives;
 
 namespace SJCNet.APIDesign.API.Utility
 {
@@ -8,41 +11,47 @@ namespace SJCNet.APIDesign.API.Utility
     {
         private readonly int _recordCount;
         private readonly int _page;
+        private const string PaginationHeader = "X-Pagination";
 
         // Would usually be stored in config.
         private const int _maxPageSize = 10;
 
-        public int SkipCount { get; internal set; }
-
-        public int PageSize { get; internal set; }
-        public bool PaginationInUse { get; internal set; }
-
-        public PaginationHelper(int recordCount, int pageSize, int page)
+        public PaginationHelper(int recordCount, int pageSize, int currentPage)
         {
-            this.PaginationInUse = (pageSize != 0 && page != 0);
-            if (!PaginationInUse) return;
+            this.PaginationIsActive = (pageSize != 0 && currentPage != 0);
+            if (!PaginationIsActive) return;
 
-            _recordCount = recordCount;
-            _page = page;
-            this.PageSize = pageSize;
-            this.SkipCount = (PageSize * (page - 1));
+            this.RecordCount = recordCount;
+            this.CurrentPage = currentPage;
 
             // Ensure pagesize isn't out of range
-            if (pageSize > _maxPageSize)
-            {
-                pageSize = _maxPageSize;
-            }
+            this.PageSize = (pageSize > _maxPageSize) ? _maxPageSize : pageSize;
+
+            // Generate the pagination header info.
+            this.Header = new KeyValuePair<string, StringValues>(PaginationHeader, SerializePaginationInfo());
         }
 
-        public string GetInfo()
+        public int SkipCount => (PageSize * (CurrentPage - 1));
+            
+        public int PageSize { get; internal set; }
+
+        public bool PaginationIsActive { get; internal set; }
+
+        private int RecordCount { get; set; }
+
+        private int CurrentPage { get; set; }
+
+        public KeyValuePair<string, StringValues> Header { get; internal set; }
+
+        private string SerializePaginationInfo()
         {
-            var totalPages = (int)Math.Ceiling((double)_recordCount / this.PageSize);
+            var totalPages = (int)Math.Ceiling((double)this.RecordCount / this.PageSize);
 
             var paginationHeader = new
             {
-                currentPage = _page,
+                currentPage = this.CurrentPage,
                 pageSize = this.PageSize,
-                totalCount = _recordCount,
+                recordCount = this.RecordCount,
                 totalPages = totalPages,
             };
 

@@ -35,18 +35,17 @@ namespace SJCNet.APIDesign.API.Controllers
                     var productsResult = products.ApplySort(sort);
 
                     // Add pagination
-                    var paginationHelper = new PaginationHelper(products.Count(), pageSize, page);
-                    if (paginationHelper.PaginationInUse)
-                    {
-                        HttpContext.Response.Headers.Add("X-Pagination", paginationHelper.GetInfo());
+                    var helper = new PaginationHelper(products.Count(), pageSize, page);
+                    HttpContext.Response.Headers.Add(helper.Header);
 
-                        productsResult = productsResult
-                            .Skip(paginationHelper.SkipCount)
-                            .Take(paginationHelper.PageSize);
-                    }
-                    
+                    // Generate result
+                    productsResult = productsResult
+                        .Skip(helper.SkipCount)
+                        .Take(helper.PageSize);
+
                     return Ok(productsResult.ToList());
-                }
+
+                };
             }
             catch (Exception ex)
             {
@@ -60,7 +59,7 @@ namespace SJCNet.APIDesign.API.Controllers
         {
             try
             {
-                if(id == 0)
+                if (id == 0)
                 {
                     return BadRequest();
                 }
@@ -94,7 +93,7 @@ namespace SJCNet.APIDesign.API.Controllers
                 var validator = new ProductValidator();
                 var results = validator.Validate(product);
 
-                if(results.IsValid)
+                if (results.IsValid)
                 {
                     if (_repository.Add(product))
                     {
@@ -135,7 +134,7 @@ namespace SJCNet.APIDesign.API.Controllers
                 }
 
                 return BadRequest();
-               
+
             }
             catch (Exception ex)
             {
@@ -182,7 +181,7 @@ namespace SJCNet.APIDesign.API.Controllers
                     {
                         return NotFound();
                     }
-                    
+
                     productPatchDocument.ApplyTo(product);
                     if (_repository.Update(product))
                     {
