@@ -4,6 +4,7 @@ using SJCNet.APIDesign.API.Utility;
 using SJCNet.APIDesign.Data;
 using SJCNet.APIDesign.Data.Repository;
 using SJCNet.APIDesign.Model;
+using SJCNet.APIDesign.Model.Validation;
 using System;
 using System.Linq;
 using System.Net;
@@ -21,8 +22,6 @@ namespace SJCNet.APIDesign.API.Controllers
             _repository = repository;
         }
 
-        // TODO: Do we need to use async controller actions?
-
         [HttpGet]
         public IActionResult Get(string sort = "name", int page = 0, int pageSize = 0)
         {
@@ -36,41 +35,34 @@ namespace SJCNet.APIDesign.API.Controllers
                     var productsResult = products.ApplySort(sort);
 
                     // Add pagination
-                    var paginationHelper = new PaginationHelper(products.Count(), pageSize, page);
-                    if (paginationHelper.PaginationInUse)
+                    var helper = new PaginationHelper(products.Count(), pageSize, page);
+                    if (helper.PaginationIsActive)
                     {
-                        HttpContext.Response.Headers.Add("X-Pagination", paginationHelper.GetInfo());
+                        HttpContext.Response.Headers.Add("X-Pagination", helper.PaginationInfoJson);
 
+                        // Generate paged result
                         productsResult = productsResult
-                            .Skip(paginationHelper.SkipCount)
-                            .Take(paginationHelper.PageSize);
+                            .Skip(helper.SkipCount)
+                            .Take(helper.PageSize);
                     }
                     
                     return Ok(productsResult.ToList());
-                }
+
+                };
             }
-            catch (Exception ex)
+            catch
             {
-                // TODO: Logging would be implemented here.
+                // Logging would be implemented here.
                 return StatusCode((int)HttpStatusCode.InternalServerError);
             }
         }
 
-        /// <summary>
-        /// Get a product by an id
-        /// </summary>
-        /// <param name="id">Id of the product to return</param>
-        /// <remarks>Find a product</remarks>
-        /// <response code="200">Ok</response>
-        /// <response code="404">Resource not found</response>
-        /// <response code="400">Bad request</response>
-        /// <response code="500">Internal Server Error</response>
         [HttpGet("{id}")]
         public IActionResult Get(int id)
         {
             try
             {
-                if(id == 0)
+                if (id == 0)
                 {
                     return BadRequest();
                 }
@@ -89,9 +81,9 @@ namespace SJCNet.APIDesign.API.Controllers
                     }
                 }
             }
-            catch (Exception ex)
+            catch
             {
-                // TODO: Logging would be implemented here.
+                // Logging would be implemented here.
                 return StatusCode((int)HttpStatusCode.InternalServerError);
             }
         }
@@ -101,21 +93,23 @@ namespace SJCNet.APIDesign.API.Controllers
         {
             try
             {
-                // TODO: Validate input
-                // IF NOT VALID return BadRequest()
+                var validator = new ProductValidator();
+                var results = validator.Validate(product);
 
-                if (_repository.Add(product))
+                if (results.IsValid)
                 {
-                    // TODO: properly format URI
-                    var entityUri = new Uri($"{HttpContext.Request.Path}/{product.Id}");
-                    return Created(entityUri, product);
+                    if (_repository.Add(product))
+                    {
+                        var entityUri = new Uri($"{HttpContext.Request.Host}{HttpContext.Request.Path}/{product.Id}");
+                        return Created(entityUri, product);
+                    }
                 }
 
                 return BadRequest();
             }
-            catch (Exception ex)
+            catch
             {
-                // TODO: Logging would be implemented here.
+                // Logging would be implemented here.
                 return StatusCode((int)HttpStatusCode.InternalServerError);
             }
         }
@@ -125,25 +119,28 @@ namespace SJCNet.APIDesign.API.Controllers
         {
             try
             {
-                // TODO: Validate input
-                // IF NOT VALID return BadRequest()
+                var validator = new ProductValidator();
+                var results = validator.Validate(product);
 
-                if (_repository.Get(id) == null)
+                if (results.IsValid)
                 {
-                    return NotFound();
-                }
+                    if (_repository.Get(id) == null)
+                    {
+                        return NotFound();
+                    }
 
-                if (_repository.Update(product))
-                {
-                    return Ok(product);
+                    if (_repository.Update(product))
+                    {
+                        return Ok(product);
+                    }
                 }
 
                 return BadRequest();
-               
+
             }
-            catch (Exception ex)
+            catch
             {
-                // TODO: Logging would be implemented here.
+                // Logging would be implemented here.
                 return StatusCode((int)HttpStatusCode.InternalServerError);
             }
         }
@@ -153,7 +150,6 @@ namespace SJCNet.APIDesign.API.Controllers
         {
             try
             {
-
                 if (_repository.Get(id) == null)
                 {
                     return NotFound();
@@ -165,24 +161,13 @@ namespace SJCNet.APIDesign.API.Controllers
                 }
 
                 return BadRequest();
-
             }
-            catch (Exception ex)
+            catch
             {
-                // TODO: Logging would be implemented here.
+                // Logging would be implemented here.
                 return StatusCode((int)HttpStatusCode.InternalServerError);
             }
         }
-
-        /*
-        [
-            {
-              "op": "replace",
-              "path": "/Name",
-              "value": "Test123"
-            }
-        ]
-        */
 
         [HttpPatch("{id}")]
         public IActionResult Patch(int id, [FromBody]JsonPatchDocument productPatchDocument)
@@ -192,14 +177,24 @@ namespace SJCNet.APIDesign.API.Controllers
                 // Validate parameter
                 if (productPatchDocument != null)
                 {
-
                     var product = _repository.Get(id);
                     if (product == null)
                     {
                         return NotFound();
                     }
-                    
+
                     productPatchDocument.ApplyTo(product);
+
+                    // Validate the product
+                    var validator = new ProductValidator();
+                    var results = validator.Validate(product);
+
+                    if (!results.IsValid)
+                    {
+                        return BadRequest();
+                    }
+
+                    // Finally, update hte product.
                     if (_repository.Update(product))
                     {
                         return Ok(product);
@@ -208,9 +203,9 @@ namespace SJCNet.APIDesign.API.Controllers
 
                 return BadRequest();
             }
-            catch (Exception ex)
+            catch
             {
-                // TODO: Logging would be implemented here.
+                // Logging would be implemented here.
                 return StatusCode((int)HttpStatusCode.InternalServerError);
             }
         }

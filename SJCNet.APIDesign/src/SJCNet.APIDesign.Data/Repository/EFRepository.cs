@@ -6,8 +6,6 @@ using System.Threading.Tasks;
 
 namespace SJCNet.APIDesign.Data.Repository
 {
-    // TODO: Handle disposal of DataContext;
-
     public abstract class EFRepository<T> : IRepository<T> where T : class, IEntity
     {
         public EFRepository(DataContext context)

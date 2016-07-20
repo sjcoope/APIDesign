@@ -18,8 +18,8 @@
     "Microsoft.EntityFrameworkCore.InMemory": "1.0.0",
     "Swashbuckle": "6.0.0-beta901",
     "SJCNet.APIDesign.Model": "1.0.0-*",
-    "System.Linq.Dynamic.Core": "1.0.5"
-  },
+    "System.Linq.Dynamic.Core": "1.0.5",
+    "SJCNet.APIDesign.Model.Validation": "1.0.0-*"  },
 
   "tools": {
     "Microsoft.AspNetCore.Server.IISIntegration.Tools": "1.0.0-preview2-final"

@@ -24,7 +24,7 @@ namespace SJCNet.APIDesign.API.Utility
             {
                 if(sortOption.StartsWith("-"))
                 {
-                    sortExpression.Append($"{sortOption.Remove(0, 1)} decending,");
+                    sortExpression.Append($"{sortOption.Remove(0, 1)} descending,");
                 }
                 else
                 {
