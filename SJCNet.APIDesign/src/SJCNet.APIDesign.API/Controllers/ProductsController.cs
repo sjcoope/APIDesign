@@ -50,9 +50,9 @@ namespace SJCNet.APIDesign.API.Controllers
 
                 };
             }
-            catch (Exception ex)
+            catch
             {
-                // TODO: Logging would be implemented here.
+                // Logging would be implemented here.
                 return StatusCode((int)HttpStatusCode.InternalServerError);
             }
         }
@@ -81,9 +81,9 @@ namespace SJCNet.APIDesign.API.Controllers
                     }
                 }
             }
-            catch (Exception ex)
+            catch
             {
-                // TODO: Logging would be implemented here.
+                // Logging would be implemented here.
                 return StatusCode((int)HttpStatusCode.InternalServerError);
             }
         }
@@ -100,17 +100,16 @@ namespace SJCNet.APIDesign.API.Controllers
                 {
                     if (_repository.Add(product))
                     {
-                        // TODO: properly format URI
-                        var entityUri = new Uri($"{HttpContext.Request.Path}/{product.Id}");
+                        var entityUri = new Uri($"{HttpContext.Request.Host}{HttpContext.Request.Path}/{product.Id}");
                         return Created(entityUri, product);
                     }
                 }
 
                 return BadRequest();
             }
-            catch (Exception ex)
+            catch
             {
-                // TODO: Logging would be implemented here.
+                // Logging would be implemented here.
                 return StatusCode((int)HttpStatusCode.InternalServerError);
             }
         }
@@ -139,9 +138,9 @@ namespace SJCNet.APIDesign.API.Controllers
                 return BadRequest();
 
             }
-            catch (Exception ex)
+            catch
             {
-                // TODO: Logging would be implemented here.
+                // Logging would be implemented here.
                 return StatusCode((int)HttpStatusCode.InternalServerError);
             }
         }
@@ -163,9 +162,9 @@ namespace SJCNet.APIDesign.API.Controllers
 
                 return BadRequest();
             }
-            catch (Exception ex)
+            catch
             {
-                // TODO: Logging would be implemented here.
+                // Logging would be implemented here.
                 return StatusCode((int)HttpStatusCode.InternalServerError);
             }
         }
@@ -178,7 +177,6 @@ namespace SJCNet.APIDesign.API.Controllers
                 // Validate parameter
                 if (productPatchDocument != null)
                 {
-                    // TODO: Implement validation on patch.
                     var product = _repository.Get(id);
                     if (product == null)
                     {
@@ -186,6 +184,17 @@ namespace SJCNet.APIDesign.API.Controllers
                     }
 
                     productPatchDocument.ApplyTo(product);
+
+                    // Validate the product
+                    var validator = new ProductValidator();
+                    var results = validator.Validate(product);
+
+                    if (!results.IsValid)
+                    {
+                        return BadRequest();
+                    }
+
+                    // Finally, update hte product.
                     if (_repository.Update(product))
                     {
                         return Ok(product);
@@ -194,9 +203,9 @@ namespace SJCNet.APIDesign.API.Controllers
 
                 return BadRequest();
             }
-            catch (Exception ex)
+            catch
             {
-                // TODO: Logging would be implemented here.
+                // Logging would be implemented here.
                 return StatusCode((int)HttpStatusCode.InternalServerError);
             }
         }
