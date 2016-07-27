@@ -1,0 +1,29 @@
+@echo off
+
+REM SET opencoverversion=4.6.519
+REM SET reportgeneratorversion=2.4.3
+
+SET project=SJCNet.APIDesign.Unit
+
+REM SET reportgenerator=%packages%\ReportGenerator\%reportgeneratorversion%\tools\ReportGenerator.exe
+
+REM SET filter="+[*]* -[*.Tests]* -[*]System.Collections.* -[*]System.Diagnostics.* -[*]System.Globalization.* -[*]System.IO.* -[*]System.Reflection.* -[*]System.Resources.* -[*]System.Runtime.* -[*]System.Security.* -[*]System.StubHelpers.* -[*]System.Threading.* -[*]Microsoft.* -[*]Windows.* -[*]System.App* -[*]System.Text.Decoder* -[*]System.Text.Encoder* -[*]System.Text.*Encoding -[*]System.Text.Internal* -[xunit.*]*"
+
+SET targetdir=%corefx%\bin\tests\%testsubdir%\%project%.Tests\netcoreapp1.0
+
+Set targetdir=C:\Code\SJCNet.APIDesign\SJCNet.APIDesign\src\SJCNet.APIDesign.Unit.Test\bin\Debug\netcoreapp1.0
+SET resultsfile=testresults.xml
+SET opencover=C:\Users\simon\.nuget\packages\OpenCover\4.6.519\tools\OpenCover.Console.exe
+SET xunitdir=C:\Users\simon\.nuget\packages\xunit.runner.console\2.2.0-beta2-build3300\tools
+
+SET corerunargs=%xunitdir%\xunit.console.exe %project%.Test.dll -xml %resultsfile% -notrait category=OuterLoop -notrait category=failing -notrait category=nonwindowstests
+SET coveragefile=coverage.xml
+SET coveragedir=coverage
+
+REM opencover.console.exe -register:user -target:"C:/Program Files/dotnet/dotnet.exe" -targetargs:"test test/MyProject.Test" -output:"coverage.xml"
+
+%opencover% -oldStyle -register:user -targetdir:%targetdir% -target:"C:/Program Files/dotnet/dotnet.exe" -output:%coveragefile% -targetargs:"%corerunargs%"
+
+REM %opencover% -oldStyle -filter:%filter% -excludebyfile:"*\Common\src\System\SR.*" -nodefaultfilters -excludebyattribute:*.ExcludeFromCodeCoverage* -skipautoprops -hideskipped:All -threshold:1 -returntargetcode -register:user -targetdir:%targetdir% -target:CoreRun.exe -output:%coveragefile% -targetargs:"%corerunargs%"
+
+REM %reportgenerator% -targetdir:%coveragedir% -reporttypes:Html;Badges -reports:%coveragefile% -verbosity:Error
