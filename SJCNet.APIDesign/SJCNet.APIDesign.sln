@@ -7,7 +7,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{0881C447-AD8
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{3CAEC238-9F5D-4AF3-B415-BEE718128E32}"
 	ProjectSection(SolutionItems) = preProject
+		..\..\dotnet\corefx\Documentation\building\facade-code-coverage.bat = ..\..\dotnet\corefx\Documentation\building\facade-code-coverage.bat
 		global.json = global.json
+		src\SJCNet.APIDesign.Unit.Test\RunCodeCoverage.bat = src\SJCNet.APIDesign.Unit.Test\RunCodeCoverage.bat
 	EndProjectSection
 EndProject
 Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "SJCNet.APIDesign.API", "src\SJCNet.APIDesign.API\SJCNet.APIDesign.API.xproj", "{FAC87DA8-BB09-4E10-8052-D6A998222A3F}"
@@ -16,7 +18,7 @@ Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "SJCNet.APIDesign.Data", "sr
 EndProject
 Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "SJCNet.APIDesign.Model", "src\SJCNet.APIDesign.Model\SJCNet.APIDesign.Model.xproj", "{3F327A79-79A2-4578-BC61-0B0F92C91596}"
 EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "SJCNet.APIDesign.Tests.Unit", "src\SJCNet.APIDesign.Tests.Unit\SJCNet.APIDesign.Tests.Unit.xproj", "{D011D6D0-7890-44EF-985B-F44F6E0B52AF}"
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "SJCNet.APIDesign.Unit.Test", "src\SJCNet.APIDesign.Unit.Test\SJCNet.APIDesign.Unit.Test.xproj", "{FBCF2C4B-7027-4AB4-9F67-D467746571B7}"
 EndProject
 Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "SJCNet.APIDesign.Model.Validation", "src\SJCNet.APIDesign.Model.Validation\SJCNet.APIDesign.Model.Validation.xproj", "{A69B3906-4757-4A8D-8D60-FC10297EACF7}"
 EndProject
@@ -38,10 +40,10 @@ Global
 		{3F327A79-79A2-4578-BC61-0B0F92C91596}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3F327A79-79A2-4578-BC61-0B0F92C91596}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3F327A79-79A2-4578-BC61-0B0F92C91596}.Release|Any CPU.Build.0 = Release|Any CPU
-		{D011D6D0-7890-44EF-985B-F44F6E0B52AF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{D011D6D0-7890-44EF-985B-F44F6E0B52AF}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{D011D6D0-7890-44EF-985B-F44F6E0B52AF}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{D011D6D0-7890-44EF-985B-F44F6E0B52AF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FBCF2C4B-7027-4AB4-9F67-D467746571B7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FBCF2C4B-7027-4AB4-9F67-D467746571B7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FBCF2C4B-7027-4AB4-9F67-D467746571B7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FBCF2C4B-7027-4AB4-9F67-D467746571B7}.Release|Any CPU.Build.0 = Release|Any CPU
 		{A69B3906-4757-4A8D-8D60-FC10297EACF7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{A69B3906-4757-4A8D-8D60-FC10297EACF7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A69B3906-4757-4A8D-8D60-FC10297EACF7}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -54,7 +56,7 @@ Global
 		{FAC87DA8-BB09-4E10-8052-D6A998222A3F} = {0881C447-AD8D-4517-ABD3-A0007383421E}
 		{3EC0E4EA-8E33-47ED-8E10-74FC25D0B57B} = {0881C447-AD8D-4517-ABD3-A0007383421E}
 		{3F327A79-79A2-4578-BC61-0B0F92C91596} = {0881C447-AD8D-4517-ABD3-A0007383421E}
-		{D011D6D0-7890-44EF-985B-F44F6E0B52AF} = {0881C447-AD8D-4517-ABD3-A0007383421E}
+		{FBCF2C4B-7027-4AB4-9F67-D467746571B7} = {0881C447-AD8D-4517-ABD3-A0007383421E}
 		{A69B3906-4757-4A8D-8D60-FC10297EACF7} = {0881C447-AD8D-4517-ABD3-A0007383421E}
 	EndGlobalSection
 EndGlobal

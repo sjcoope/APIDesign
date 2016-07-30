@@ -6,8 +6,8 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Microsoft")]
-[assembly: AssemblyProduct("SJCNet.APIDesign.Tests.Unit")]
+[assembly: AssemblyCompany("")]
+[assembly: AssemblyProduct("SJCNet.APIDesign.Unit.Test")]
 [assembly: AssemblyTrademark("")]
 
 // Setting ComVisible to false makes the types in this assembly not visible
@@ -16,4 +16,4 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("d011d6d0-7890-44ef-985b-f44f6e0b52af")]
+[assembly: Guid("fbcf2c4b-7027-4ab4-9f67-d467746571b7")]
